@@ -1,5 +1,31 @@
 import styled from 'styled-components';
 import { Fragment, useEffect, useState } from 'react';
+function Content() {
+  const [image, setImage] = useState('');
+  const [fileUrl, setFileUrl] = useState('');
+  
+  useEffect(() => {
+    setImage(fileUrl);
+    return () => {
+      URL.revokeObjectURL(image);
+    }
+  }, [image, fileUrl]);
+  
+  const handleFileInput = (e) => {
+    let url = e.target.files[0];
+    setFileUrl(URL.createObjectURL(url));
+  }
+
+  return (
+    <Container>
+      <Title>Avatar Preview App</Title>
+      <StyledInput type="file" onChange={handleFileInput}></StyledInput>
+      {image && <PreviewImage src={image} />}
+    </Container>
+  );
+}
+
+export default Content;
 
 const Container = styled.div`
   display: flex;
@@ -30,30 +56,3 @@ const PreviewImage = styled.img`
   height: 400px;
   border-radius: 50%;
 `;
-
-function Content() {
-  const [image, setImage] = useState('');
-  const [fileUrl, setFileUrl] = useState('');
-  
-  useEffect(() => {
-    setImage(fileUrl);
-    return () => {
-      URL.revokeObjectURL(image);
-    }
-  }, [image, fileUrl]);
-  
-  const handleFileInput = (e) => {
-    let url = e.target.files[0];
-    setFileUrl(URL.createObjectURL(url));
-  }
-
-  return (
-    <Container>
-      <Title>Avatar Preview App</Title>
-      <StyledInput type="file" onChange={handleFileInput}></StyledInput>
-      {image && <PreviewImage src={image} />}
-    </Container>
-  );
-}
-
-export default Content;
